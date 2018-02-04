@@ -22,7 +22,7 @@ import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.pkm.hero.data.dao.HeroDao;
+//import com.pkm.hero.data.dao.HeroDao;
 import com.pkm.hero.data.entity.HeroEntity;
 import com.pkm.hero.data.entity.UniverseEntity;
 import com.pkm.hero.data.service.HeroDataService;
@@ -40,8 +40,8 @@ public class HeroDataServiceTestFailuresTest {
 	@Autowired
 	private HeroDataService heroDataService;
 
-	@Autowired
-	private HeroDao actualHeroDao;
+//	@Autowired
+//	private HeroDao actualHeroDao;
 
 //	private SessionFactory mockedSessionFactory;
 //	private Session mockedSession = Mockito.mock(Session.class);

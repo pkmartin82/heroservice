@@ -1,0 +1,17 @@
+# Run the following commands:
+
+brew update
+brew install mariadb
+
+# 2/4/18 - Even though mysql/mariadb "could not be found" prior to running this command, after running this command
+# the mysql/mariadb instance "remembered" the pkm database and the Hero/Alliance tables, with rows inserted to them 
+# back in 2015.
+
+# From there, to start the mysql service, run:
+
+mysqlstart # see .alias file
+
+# Then enter mysql by running:
+
+mysql # see .alias file
+

@@ -1,0 +1,603 @@
+DaoImpl
+
+package com.fmer.sfs.data.dao;
+
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+
+import com.fmer.sfs.data.model.TcAttribute;
+import com.fmer.sfs.data.model.TxSchoolAccountAttribute;
+import com.fmer.sfs.data.model.TxSchoolAttribute;
+import com.fmer.sfs.data.model.TxStoreAttribute;
+
+@Repository("attributeDao")
+public class AttributeDaoImpl implements AttributeDao{
+
+	@Autowired
+	@Qualifier("sfsSessionFactory")
+	SessionFactory sessionFactory;		
+	
+	
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	public TcAttribute getTcAttribute(String attributeCd){
+		List<TcAttribute> tcAttributes = getTcAttributes(new String[]{attributeCd});
+		return tcAttributes.get(0);
+	}
+	
+	private static Timestamp getNowTimestamp(){
+		return new Timestamp(new Date().getTime());
+	}
+	
+	/*
+	 * this is a common method that would add the criteria for
+	 * Effective Date is null or less than now date
+	 * and
+	 * Expiration Date is null or greater than now date
+	 */
+	private static void addEffectiveExpirationCriteria(Criteria criteria){
+		Criterion leEffectiveTime = Restrictions.le("effectiveTime", getNowTimestamp());
+		Criterion nullEffectiveTime = Restrictions.isNull("effectiveTime");
+		Criterion geExpirationTime = Restrictions.ge("expirationTime", getNowTimestamp());
+		Criterion nullExpirationTime = Restrictions.isNull("expirationTime");
+		criteria.add(Restrictions.or(nullEffectiveTime, leEffectiveTime));
+		criteria.add(Restrictions.or(nullExpirationTime, geExpirationTime));
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TcAttribute> getTcAttributes(String[] attributeCds){
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(TcAttribute.class, "tcAttribute");
+		criteria.add(Restrictions.in("attributeCd", attributeCds));
+		return (List<TcAttribute>)criteria.list();
+	}
+	
+	public TxSchoolAttribute getTxSchoolAttribute(String attributeCd, int schoolId){
+		List<TxSchoolAttribute> txSchoolAttributes = getTxSchoolAttributes(new String[]{attributeCd}, schoolId);
+		return (txSchoolAttributes != null && txSchoolAttributes.size() > 0) ? txSchoolAttributes.get(0) : null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TxSchoolAttribute> getTxSchoolAttributes(String[] attributeCds, Integer schoolId){
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(TxSchoolAttribute.class, "txSchoolAttribute");
+		if(schoolId != null) criteria.add(Restrictions.eq("id.schoolId", schoolId));
+		criteria.add(Restrictions.in("id.tcAttribute.attributeCd", attributeCds));
+		addEffectiveExpirationCriteria(criteria);
+		return (List<TxSchoolAttribute>) criteria.list();
+	}
+
+	/** Get ALL effective (non-expired) TxSchoolAttributes for attribute code(s) passed regardless of schoolId */
+	public List<TxSchoolAttribute> getTxSchoolAttributes(String[] attributeCds){
+		return getTxSchoolAttributes(attributeCds, null);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TxStoreAttribute> getTxStoreAttributes(String[] attributeCds, Integer storeId){
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(TxStoreAttribute.class, "txStoreAttribute");
+		if(storeId != null) criteria.add(Restrictions.eq("id.storeId", storeId));
+		criteria.add(Restrictions.in("id.tcAttribute.attributeCd", attributeCds));
+		addEffectiveExpirationCriteria(criteria);
+		return (List<TxStoreAttribute>) criteria.list();
+	}
+	
+	
+	/** Get ALL effective (non-expired) TxStoreAttributes for attribute code(s) passed regardless of storeId */
+	public List<TxStoreAttribute> getTxStoreAttributes(String[] attributeCds){	
+		return getTxStoreAttributes(attributeCds, null);
+	}
+	
+	public TxStoreAttribute getTxStoreAttribute(String attributeCd, int storeId){
+		List<TxStoreAttribute> txStoreAttributes = getTxStoreAttributes( new String[]{attributeCd}, storeId );
+		return (txStoreAttributes != null && txStoreAttributes.size() > 0) ? txStoreAttributes.get(0) : null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TxSchoolAccountAttribute> getTxSchoolAccountAttributes( String[] attributeCds, int sId, int saId ){
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(TxSchoolAccountAttribute.class, "txSchoolAccountAttribute");
+		criteria.add(Restrictions.eq("id.sId", sId));
+		criteria.add(Restrictions.eq("id.saId", saId));
+		criteria.add(Restrictions.in("id.tcAttribute.attributeCd", attributeCds));
+		addEffectiveExpirationCriteria(criteria);
+		return (List<TxSchoolAccountAttribute>) criteria.list();
+	}
+	
+	public TxSchoolAccountAttribute getTxSchoolAccountAttribute( String attributeCd, int sId, int saId ){
+		List<TxSchoolAccountAttribute> txSchoolAccountAttributes = getTxSchoolAccountAttributes( new String[]{attributeCd}, sId, saId );
+		return (txSchoolAccountAttributes != null && txSchoolAccountAttributes.size() > 0) ? txSchoolAccountAttributes.get(0) : null;
+	}
+	
+	public <T> void saveAttribute(T attribute){
+		sessionFactory.getCurrentSession().saveOrUpdate(attribute);
+	}
+
+	public <T> void deleteAttribute(T attribute){
+		sessionFactory.getCurrentSession().delete(attribute);
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+ServiceImpl
+
+package com.fmer.sfs.services.service;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.fmer.sfs.data.dao.AttributeDao;
+import com.fmer.sfs.data.dao.SchoolDao;
+import com.fmer.sfs.data.dao.StoreDao;
+import com.fmer.sfs.data.model.AttributeChangeHistory;
+import com.fmer.sfs.data.model.SFSAttribute;
+import com.fmer.sfs.data.model.SchoolLegacyMap;
+import com.fmer.sfs.data.model.TcAttribute;
+import com.fmer.sfs.data.model.TxSchoolAccountAttribute;
+import com.fmer.sfs.data.model.TxSchoolAccountAttributeId;
+import com.fmer.sfs.data.model.TxSchoolAttribute;
+import com.fmer.sfs.data.model.TxSchoolAttributeId;
+import com.fmer.sfs.data.model.TxStoreAttribute;
+import com.fmer.sfs.data.model.TxStoreAttributeId;
+import com.fmer.sfs.data.util.AttributeConstants.FilterLevel;
+import com.fmer.sfs.services.exception.AttributeException;
+import com.fmer.systemlog.FMDLogger;
+
+@Service("attributeService")
+@Transactional(value="sfsTransactionManager", propagation=Propagation.SUPPORTS)
+public class AttributeServiceImpl implements AttributeService {
+	
+	private static SimpleDateFormat dateformatter = new SimpleDateFormat("MM/dd/yyyy");
+	
+	@Autowired
+	private AttributeDao attributeDao;
+	
+	@Autowired
+	private SchoolDao schoolDao;
+	
+	@Autowired
+	private StoreDao storeDao;
+
+	@Override
+	public SFSAttribute getSFSAttribute(FilterLevel filterLevel, int idValue, String attributeCd) throws AttributeException {
+		return getSFSAttribute(filterLevel, idValue, null, attributeCd);
+	}
+	
+	@Override
+	public SFSAttribute getSFSAttribute(FilterLevel filterLevel, Integer idValue1, Integer idValue2, String attributeCd) throws AttributeException {
+		try{
+			SFSAttribute sfsAttribute = new SFSAttribute();
+			sfsAttribute.setFilterlevel(filterLevel);			
+			
+			switch (filterLevel) {
+				case Default:
+					TcAttribute tcAttribute = attributeDao.getTcAttribute(attributeCd);
+					sfsAttribute.setTcAttribute(tcAttribute);					
+					sfsAttribute.setValue(tcAttribute.getDefaultValue());
+					break;
+				case School:
+					TxSchoolAttribute txSchoolAttribute = attributeDao.getTxSchoolAttribute(attributeCd, idValue1);
+					if(txSchoolAttribute == null){
+						int defaultId = 0;
+						return getSFSAttribute(FilterLevel.Default, defaultId, attributeCd);
+					}else{
+						sfsAttribute.setTcAttribute(txSchoolAttribute.getId().getTcAttribute());					
+						sfsAttribute.setValue(txSchoolAttribute.getValue());
+						break;
+					}
+				case Store:
+					TxStoreAttribute txStoreAttribute = attributeDao.getTxStoreAttribute(attributeCd, idValue1);
+					if(txStoreAttribute == null){
+						int schoolId = storeDao.findStoreById(idValue1).getGateway().getSchool().getSchoolId();
+						return getSFSAttribute(FilterLevel.School, schoolId, attributeCd);
+					}else{
+						sfsAttribute.setTcAttribute(txStoreAttribute.getId().getTcAttribute());					
+						sfsAttribute.setValue(txStoreAttribute.getValue());
+						break;
+					}
+				case SchoolAccount:
+					TxSchoolAccountAttribute txSchoolAccountAttribute = attributeDao.getTxSchoolAccountAttribute(attributeCd, idValue1, idValue2);
+					if(txSchoolAccountAttribute == null){
+						SchoolLegacyMap schoolLegacyMap = schoolDao.getSchoolLegacyMap(idValue1, idValue2);
+						if(schoolLegacyMap == null){
+							schoolLegacyMap = schoolDao.getSchoolLegacyMap(idValue1, 0); // try to find it by S_Id;
+						}
+						if(schoolLegacyMap != null){
+							return getSFSAttribute(FilterLevel.School, schoolLegacyMap.getSchoolId(), attributeCd);
+						}else{
+							int defaultId = 0;
+							return getSFSAttribute(FilterLevel.Default, defaultId, attributeCd); //Could not find the schoolId so will return the default 
+						}
+					}else{
+						sfsAttribute.setTcAttribute(txSchoolAccountAttribute.getId().getTcAttribute());					
+						sfsAttribute.setValue(txSchoolAccountAttribute.getValue());
+						break;
+					}					
+				default:
+					throw new AttributeException("filterLevel does not exist" + filterLevel);
+			}
+			
+			return sfsAttribute; 
+
+		}catch (Exception e) {
+			FMDLogger.logError("Error in AttributeService.getSFSAttribute:" + attributeCd, e);
+			throw new AttributeException("Error getting Attribute: " + attributeCd + " because " + e.getMessage(), e);
+		}
+
+	}
+	
+	@Override
+	public <T> T getAttributeValue(FilterLevel filterLevel, int idValue, String attributeCd, Class<T> clazz) throws AttributeException {
+		return getAttributeValue(filterLevel, idValue, null, attributeCd, clazz);
+
+	}
+	
+	@Override
+	public <T> T getAttributeValue(FilterLevel filterLevel, Integer idValue1, Integer idValue2, String attributeCd, Class<T> clazz) throws AttributeException {
+		try{
+			SFSAttribute sfsAttribute = getSFSAttribute(filterLevel, idValue1, idValue2, attributeCd);
+			return getTypedValue(sfsAttribute.getValue(), sfsAttribute.getTcAttribute().getDataTypeCd(), clazz); 
+		}catch (Exception e) {
+			FMDLogger.logError("Error in AttributeService.getAttributeValue", e);
+			throw new AttributeException("Error getting Attribute: " + attributeCd + " because " + e.getMessage(), e);
+		}
+	}
+	
+	@Override
+	public String getAttributeValue(FilterLevel filterLevel, int idValue, String attributeCd) throws AttributeException {
+		return getAttributeValue(filterLevel, idValue, attributeCd, String.class);
+	}
+	
+	public Map<String, SFSAttribute> getAttributes(FilterLevel filterLevel, Integer idValue, String[] attributeCds) throws AttributeException {
+		try{
+			Map<String, SFSAttribute> sfsAttributeMap = new HashMap<String, SFSAttribute>();
+
+			if(filterLevel == FilterLevel.Store){
+				
+				List<TxStoreAttribute> txStoreAttributes = attributeDao.getTxStoreAttributes(attributeCds, null);
+				
+				for(TxStoreAttribute txStoreAttribute : txStoreAttributes){
+					SFSAttribute sfsAttribute = new SFSAttribute();						
+					sfsAttribute.setTcAttribute(txStoreAttribute.getId().getTcAttribute());					
+					sfsAttribute.setFilterlevel(FilterLevel.School);
+					sfsAttribute.setValue(txStoreAttribute.getValue());
+					sfsAttributeMap.put(txStoreAttribute.getId().getTcAttribute().getAttributeCd(), sfsAttribute);
+				}
+			}
+			
+			if(filterLevel == FilterLevel.School){
+				List<TxSchoolAttribute> txSchoolAttributes = attributeDao.getTxSchoolAttributes(attributeCds, idValue);				
+				for(TxSchoolAttribute txSchoolAttribute : txSchoolAttributes){
+					if(!sfsAttributeMap.containsKey(txSchoolAttribute.getId().getTcAttribute().getAttributeCd())){
+						SFSAttribute sfsAttribute = new SFSAttribute();						
+						sfsAttribute.setTcAttribute(txSchoolAttribute.getId().getTcAttribute());					
+						sfsAttribute.setFilterlevel(FilterLevel.School);
+						sfsAttribute.setValue(txSchoolAttribute.getValue());
+						sfsAttributeMap.put(txSchoolAttribute.getId().getTcAttribute().getAttributeCd(), sfsAttribute);
+					}
+				}
+			}
+
+			/* ideally the attributeCds here should only be the ones that were not found in the TxSchoolAttribute
+			 * or already in the sfsAttributeMap
+			 */
+			List<TcAttribute> tcAttributes = attributeDao.getTcAttributes(attributeCds);
+			for(TcAttribute tcAttribute : tcAttributes){
+				if(!sfsAttributeMap.containsKey(tcAttribute.getAttributeCd())){
+					SFSAttribute sfsAttribute = new SFSAttribute();
+					sfsAttribute.setTcAttribute(tcAttribute);					
+					sfsAttribute.setFilterlevel(FilterLevel.Default);
+					sfsAttribute.setValue(tcAttribute.getDefaultValue());
+					sfsAttributeMap.put(tcAttribute.getAttributeCd(), sfsAttribute);
+				}
+			}
+
+			return sfsAttributeMap;
+
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new AttributeException("Error getting Attributes: " + e.getMessage(), e);
+		}
+
+	}
+	
+	private void saveAttributeChangeHistory(String attributeCd, String oldValue, String newValue, FilterLevel filterLevel, Integer idValue1, Integer idValue2, String userId){
+		AttributeChangeHistory attributeChangeHistory = new AttributeChangeHistory();
+		attributeChangeHistory.setAttributeCd(attributeCd);
+		attributeChangeHistory.setOldValue(oldValue);
+		attributeChangeHistory.setNewValue(newValue);
+		attributeChangeHistory.setChangeTime(new Timestamp(new Date().getTime()));
+		attributeChangeHistory.setChangeUser(userId);
+		attributeChangeHistory.setInsertTime(new Timestamp(new Date().getTime()));
+		attributeChangeHistory.setInsertUser(userId);
+		
+		if(filterLevel == FilterLevel.School){
+			attributeChangeHistory.setSchoolId(idValue1);
+		}else if(filterLevel == FilterLevel.Store){
+			attributeChangeHistory.setStoreId(idValue1);
+		}else if(filterLevel == FilterLevel.SchoolAccount){
+			attributeChangeHistory.setSid(idValue1);
+			attributeChangeHistory.setSaid(idValue2);
+		}
+		
+		attributeDao.saveAttribute(attributeChangeHistory);
+	}
+	
+	@Override
+	public void deleteAttribute(FilterLevel filterLevel, String attributeCd, int idValue, String userId) throws Exception{
+		deleteAttribute(filterLevel, attributeCd, idValue, null, userId);
+	}
+	
+	@Override
+	public void deleteAttribute(FilterLevel filterLevel, String attributeCd, int idValue1, Integer idValue2, String userId) throws Exception{
+		
+		String oldValue = null;
+		String newValue = null;
+		if(FilterLevel.School == filterLevel){
+			TxSchoolAttribute attribute = attributeDao.getTxSchoolAttribute(attributeCd, idValue1);
+			oldValue = attribute.getValue();
+			attributeDao.deleteAttribute(attribute);
+		}else if(FilterLevel.Store == filterLevel){
+			TxStoreAttribute attribute = attributeDao.getTxStoreAttribute(attributeCd, idValue1);
+			oldValue = attribute.getValue();
+			attributeDao.deleteAttribute(attribute);
+		}else if(FilterLevel.SchoolAccount == filterLevel){
+			TxSchoolAccountAttribute attribute = attributeDao.getTxSchoolAccountAttribute(attributeCd, idValue1, idValue2);
+			oldValue = attribute.getValue();
+			attributeDao.deleteAttribute(attribute);
+		}
+		
+		saveAttributeChangeHistory(attributeCd, oldValue, newValue, filterLevel, idValue1, idValue2, userId);		
+	}
+	
+	@Override
+	public void saveAttribute(FilterLevel filterLevel, String attributeCd, int idValue1, String value, String userId) throws Exception{
+		saveAttribute(filterLevel, attributeCd, idValue1, null, value, userId);
+	}
+	
+	@Override
+	public void saveAttribute(FilterLevel filterLevel, String attributeCd, int idValue1, Integer idValue2, String value, String userId) throws Exception{
+		SFSAttribute sfsAttribute = getSFSAttribute(FilterLevel.Default, 0, attributeCd);
+		String defaultValue = sfsAttribute.getTcAttribute().getDefaultValue();
+		String oldValue = null;
+		boolean isTxAttribute = true;
+		
+		if(FilterLevel.School == filterLevel){
+			
+			TxSchoolAttribute attribute = attributeDao.getTxSchoolAttribute(attributeCd, idValue1);
+			 
+			if(attribute == null){
+				TxSchoolAttributeId id = new TxSchoolAttributeId();
+				id.setSchoolId(idValue1);
+				id.setTcAttribute(sfsAttribute.getTcAttribute());
+				
+				attribute = new TxSchoolAttribute();
+				attribute.setId(id);
+				attribute.setEffectiveTime(new Timestamp(new Date().getTime()));
+				attribute.setInsertTime(new Timestamp(new Date().getTime()));
+				attribute.setInsertUser(userId);
+				isTxAttribute = false;
+			}else{
+				attribute.setUpdateTime(new Timestamp(new Date().getTime()));
+				attribute.setUpdateUser(userId);
+				oldValue = attribute.getValue();
+			}
+			attribute.setValue(value);
+			saveOrDeleteIfValueChangedToDefault(defaultValue, value, attribute, isTxAttribute);
+			
+		}else if(FilterLevel.Store == filterLevel){
+			
+			TxStoreAttribute attribute = attributeDao.getTxStoreAttribute(attributeCd, idValue1);
+			
+			if(attribute == null){
+				TxStoreAttributeId id = new TxStoreAttributeId();
+				id.setStoreId(idValue1);
+				id.setTcAttribute(sfsAttribute.getTcAttribute());
+				
+				attribute = new TxStoreAttribute();
+				attribute.setId(id);
+				attribute.setEffectiveTime(new Timestamp(new Date().getTime()));
+				attribute.setInsertTime(new Timestamp(new Date().getTime()));
+				attribute.setInsertUser(userId);
+				isTxAttribute = false;
+			}else{
+				attribute.setUpdateTime(new Timestamp(new Date().getTime()));
+				attribute.setUpdateUser(userId);
+				oldValue = attribute.getValue();
+			}
+			attribute.setValue(value);
+			saveOrDeleteIfValueChangedToDefault(defaultValue, value, attribute, isTxAttribute);
+			
+		}else if(FilterLevel.SchoolAccount == filterLevel){
+			
+			TxSchoolAccountAttribute attribute = attributeDao.getTxSchoolAccountAttribute(attributeCd, idValue1, idValue2);
+			
+			if(attribute == null){
+				TxSchoolAccountAttributeId id = new TxSchoolAccountAttributeId();
+				id.setsId(idValue1);
+				id.setSaId(idValue2);
+				id.setTcAttribute(sfsAttribute.getTcAttribute());
+				
+				attribute = new TxSchoolAccountAttribute();
+				attribute.setId(id);
+				attribute.setEffectiveTime(new Timestamp(new Date().getTime()));
+				attribute.setInsertTime(new Timestamp(new Date().getTime()));
+				attribute.setInsertUser(userId);
+				isTxAttribute = false;
+			}else{
+				attribute.setUpdateTime(new Timestamp(new Date().getTime()));
+				attribute.setUpdateUser(userId);
+				oldValue = attribute.getValue();
+			}
+			attribute.setValue(value);
+			saveOrDeleteIfValueChangedToDefault(defaultValue, value, attribute, isTxAttribute);
+		
+		}
+		
+		if (!StringUtils.equals(oldValue, value)) {
+			saveAttributeChangeHistory(attributeCd, oldValue, value, filterLevel, idValue1, idValue2, userId);
+		}		
+	}
+	
+	private <T> void saveOrDeleteIfValueChangedToDefault(String defaultValue, String newValue, T attribute, boolean isTxAttribute) {
+		if(StringUtils.equals(defaultValue, newValue)){
+			if(isTxAttribute) {
+				attributeDao.deleteAttribute(attribute);
+			}	
+		} else{
+			attributeDao.saveAttribute(attribute);
+		}
+	}
+		
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getTypedValue(String attrValue, String attrDataTypeCd, Class<T> clazz) throws Exception{
+		if(attrValue == null){
+			return null;
+		}else if("STRING".equals(attrDataTypeCd) && clazz == String.class){
+			return (T)attrValue;
+		}else if("INT".equals(attrDataTypeCd) && clazz == Integer.class){
+			return (T) new Integer(attrValue);
+		}else if("DECIMAL".equals(attrDataTypeCd) && clazz == BigDecimal.class){
+			return (T) new BigDecimal(attrValue);
+		}else if("DATETIME".equals(attrDataTypeCd) && clazz == Date.class){
+			return (T) dateformatter.parse(attrValue);
+			//return (T) new Date(attrValue);		
+		}else if("BOOLEAN".equals(attrDataTypeCd) && clazz == Boolean.class){
+			return (T) new Boolean(attrValue);
+		} else{
+			throw new AttributeException("Attribute could not be mapped");
+		}
+	}
+
+	/** Get all TxSchool Attributes for the given attribute code */
+	@Override
+	public List<TxSchoolAttribute> getTxSchoolAttributes(String attributeCds[]) throws AttributeException {
+		return attributeDao.getTxSchoolAttributes(attributeCds);
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Services App Config
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd       ">
+	
+	<context:component-scan base-package="com.fmer.sfs.services">
+		<context:exclude-filter type="regex" expression="com.fmer.sfs.services.service.ConnectorStatusSvc*" />
+	</context:component-scan>
+	
+</beans>
+
+
+
+
+Data App Config
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd       ">
+	
+	<bean id="sfsDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="java:/jdbc/sfs_datasource" />
+		<property name="lookupOnStartup" value="true" />
+		<property name="cache" value="true" />
+		<property name="proxyInterface" value="javax.sql.DataSource" />
+	</bean>
+
+	<!--  added for local dao testing , comment this when using DAOTest -->
+	<!-- <bean id="sfsDataSource" 
+         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+		<property name="url" value="jdbc:sqlserver://dsfsdb01ocr.devs1.int:1433;DatabaseName=StudentFinancialServices"/>
+		<property name="username" value="xxx" />
+		<property name="password" value="xxx" />
+	</bean> -->
+	<bean id="sfsJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="sfsDataSource" />
+	</bean>
+	
+	<bean id="sfsSessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<qualifier value="sfsSessionFactory" />
+		<property name="dataSource">
+			<ref bean="sfsDataSource" />
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>com.fmer.sfs.data.*</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</prop>
+				<prop key="hibernate.hbm2ddl.auto">validate</prop>
+				<prop key="hibernate.show_sql">false</prop>
+			</props>
+		</property>
+	</bean>
+
+	<tx:annotation-driven />
+	
+	<bean id="sfsTransactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<qualifier value="sfsTransactionManager" />
+		<property name="sessionFactory">
+			<ref bean="sfsSessionFactory" />
+		</property>
+	</bean>
+
+	<context:component-scan base-package="com.fmer.sfs.data">
+		<context:exclude-filter type="regex" expression="com.fmer.sfs.data.model.Url*" />
+	</context:component-scan>
+	
+</beans>  

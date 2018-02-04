@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation=
+			"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	
+	<bean id="heroDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="java:/datasources/HeroDS" />
+		<property name="lookupOnStartup" value="true" />
+		<property name="cache" value="true" />
+		<property name="proxyInterface" value="javax.sql.DataSource" />
+	</bean>
+
+	<bean id="heroJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="heroDataSource" />
+	</bean>
+	
+	<bean id="heroSessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<qualifier value="heroSessionFactory" />
+		<property name="dataSource">
+			<ref bean="heroDataSource" />
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>com.pkm.hero.data.*</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.hbm2ddl.auto">validate</prop>
+				<prop key="hibernate.show_sql">false</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="heroTransactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<qualifier value="heroTransactionManager" />
+		<property name="sessionFactory">
+			<ref bean="heroSessionFactory" />
+		</property>
+	</bean>
+
+	<context:component-scan base-package="com.pkm.hero.data" />
+	<tx:annotation-driven />
+</beans>  

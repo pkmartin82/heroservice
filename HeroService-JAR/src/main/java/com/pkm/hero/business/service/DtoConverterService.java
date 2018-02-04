@@ -4,7 +4,7 @@ package com.pkm.hero.business.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
-import com.pkm.hero.data.entity.HeroEntity;
+import com.pkm.hero.service.data.entity.HeroEntity;
 import com.pkm.hero.dto.Hero;
 
 @Service("dtoConverterService")

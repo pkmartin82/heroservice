@@ -11,8 +11,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import com.pkm.hero.data.entity.HeroEntity;
-import com.pkm.hero.data.entity.UniverseEntity;
+import com.pkm.hero.service.data.entity.HeroEntity;
+import com.pkm.hero.service.data.entity.UniverseEntity;
 import com.pkm.hero.dto.Hero;
 
 @Service("heroServiceJar_dtoConverterService")

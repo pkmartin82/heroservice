@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pkm.hero.business.service.DtoConverterService;
-import com.pkm.hero.data.entity.HeroEntity;
-import com.pkm.hero.data.service.HeroDataService;
+import com.pkm.hero.service.data.entity.HeroEntity;
+import com.pkm.hero.service.data.service.HeroDataService;
 import com.pkm.hero.dto.Hero;
 
 @Service("heroServiceJar_heroFacade")

@@ -1,4 +1,4 @@
-package com.pkm.hero.data.entity;
+package com.pkm.hero.service.data.entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

@@ -9,7 +9,7 @@
 			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-	<bean id="heroData_heroDao" class="com.pkm.hero.data.dao.BadHeroDaoImpl">
+	<bean id="heroData_heroDao" class="com.pkm.hero.service.data.dao.BadHeroDaoImpl">
 	</bean>
 
 	<bean id="heroDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
@@ -31,7 +31,7 @@
 		</property>
 		<property name="packagesToScan">
 			<list>
-				<value>com.pkm.hero.data.*</value>
+				<value>com.pkm.hero.service.data.*</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -52,6 +52,6 @@
 	</bean>
 
 	<!-- Only scan the service package, not the parent package -->
-	<context:component-scan base-package="com.pkm.hero.data.service" />
+	<context:component-scan base-package="com.pkm.hero.service.data.service" />
 	<tx:annotation-driven />
 </beans>  

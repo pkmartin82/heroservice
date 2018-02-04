@@ -1,4 +1,4 @@
-package com.pkm.hero.data.test;
+package com.pkm.hero.service.data.test;
 
 import static org.junit.Assert.*;
 
@@ -11,8 +11,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.pkm.hero.data.entity.HeroEntity;
-import com.pkm.hero.data.entity.UniverseEntity;
+import com.pkm.hero.service.data.entity.HeroEntity;
+import com.pkm.hero.service.data.entity.UniverseEntity;
 
 public class HeroDataEntityTest {
 

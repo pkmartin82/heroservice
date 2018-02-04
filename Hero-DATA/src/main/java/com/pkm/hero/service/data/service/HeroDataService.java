@@ -1,8 +1,8 @@
-package com.pkm.hero.data.service;
+package com.pkm.hero.service.data.service;
 
 import java.util.List;
 
-import com.pkm.hero.data.entity.HeroEntity;
+import com.pkm.hero.service.data.entity.HeroEntity;
 
 public interface HeroDataService {
 

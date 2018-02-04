@@ -1,4 +1,4 @@
-package com.pkm.hero.data.test;
+package com.pkm.hero.service.data.test;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

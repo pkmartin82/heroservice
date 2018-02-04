@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.pkm.hero.data.dao;
+package com.pkm.hero.service.data.dao;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.pkm.genericdao.dao.GenericDaoImpl;
-import com.pkm.hero.data.entity.HeroEntity;
+import com.pkm.hero.service.data.entity.HeroEntity;
 
 /**
  * @author patrick

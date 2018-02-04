@@ -1,4 +1,4 @@
-package com.pkm.hero.data.test.rule;
+package com.pkm.hero.service.data.test.rule;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;

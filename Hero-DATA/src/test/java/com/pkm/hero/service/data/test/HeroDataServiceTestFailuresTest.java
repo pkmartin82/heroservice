@@ -1,4 +1,4 @@
-package com.pkm.hero.data.test;
+package com.pkm.hero.service.data.test;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -23,9 +23,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 //import com.pkm.hero.data.dao.HeroDao;
-import com.pkm.hero.data.entity.HeroEntity;
-import com.pkm.hero.data.entity.UniverseEntity;
-import com.pkm.hero.data.service.HeroDataService;
+import com.pkm.hero.service.data.entity.HeroEntity;
+import com.pkm.hero.service.data.entity.UniverseEntity;
+import com.pkm.hero.service.data.service.HeroDataService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/HeroData_TestServiceApplicationConfig.xml")

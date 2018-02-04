@@ -28,7 +28,7 @@
 		</property>
 		<property name="packagesToScan">
 			<list>
-				<value>com.pkm.hero.data.*</value>
+				<value>com.pkm.hero.service.data.*</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -48,6 +48,6 @@
 		</property>
 	</bean>
 
-	<context:component-scan base-package="com.pkm.hero.data" />
+	<context:component-scan base-package="com.pkm.hero.service.data" />
 	<tx:annotation-driven />
 </beans>  

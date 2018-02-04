@@ -1,4 +1,4 @@
-package com.pkm.hero.data.test;
+package com.pkm.hero.service.data.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -29,9 +29,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.pkm.hero.data.dao.HeroDao;
-import com.pkm.hero.data.entity.HeroEntity;
-import com.pkm.hero.data.entity.UniverseEntity;
+import com.pkm.hero.service.data.dao.HeroDao;
+import com.pkm.hero.service.data.entity.HeroEntity;
+import com.pkm.hero.service.data.entity.UniverseEntity;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/HeroData_ApplicationConfig.xml")

@@ -10,7 +10,7 @@
 	<properties>
 		<java.version>1.7</java.version>
 		<jacoco.version>0.7.3.201502191951</jacoco.version>
-		<spring.version>3.2.5.RELEASE</spring.version>
+		<spring.version>4.2.3.RELEASE</spring.version>
 		<hibernate.version>3.6.10.Final</hibernate.version>
 		<cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
 	</properties>
@@ -182,6 +182,11 @@
 		</plugins>
 	</reporting>
 	<dependencies>
+	   <dependency>
+	       <groupId>com.pkm.genericdao</groupId>
+	       <artifactId>GenericDAO</artifactId>
+	       <version>0.0.2-SNAPSHOT</version>
+	   </dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>

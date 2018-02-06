@@ -31,8 +31,8 @@
 		</testResources>
 
 
-		<!-- Maven will append the version to the finalName (which is the name 
-			given to the generated war, and hence the context root) -->
+		<!-- The finalName is the name given to the generated war, and hence the 
+			context root -->
 		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
@@ -54,11 +54,16 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.5</version>
 				<configuration>
+					<warSourceDirectory>WebContent</warSourceDirectory>
+					<warSourceExcludes>**/**.java</warSourceExcludes>
+					<webXml>WebContent/WEB-INF/web.xml</webXml>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<archive>
 						<index>true</index>
 						<manifest>
 							<addClasspath>true</addClasspath>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 						</manifest>
 						<manifestEntries>
 						</manifestEntries>

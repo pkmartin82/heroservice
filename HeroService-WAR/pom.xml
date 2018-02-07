@@ -1,7 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.pkm.hero</groupId>
+	<groupId>com.pkm.hero.service</groupId>
+	<artifactId>HeroService-WAR</artifactId>
+	<packaging>war</packaging>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>HeroService-WAR</name>
 	<description>The HeroService Dynamic Web Project</description>
@@ -13,6 +15,7 @@
 		<hibernate.version>3.6.10.Final</hibernate.version>
 		<cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
 	</properties>
+
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<resources>
@@ -220,6 +223,5 @@
 	<organization>
 		<name>PKM Enterprises</name>
 	</organization>
-	<artifactId>HeroService-WAR</artifactId>
-	<packaging>war</packaging>
+
 </project>

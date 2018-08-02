@@ -185,7 +185,7 @@
 	   <dependency>
 	       <groupId>com.pkm.genericdao</groupId>
 	       <artifactId>GenericDAO</artifactId>
-	       <version>0.0.2-SNAPSHOT</version>
+	       <version>1.0.1-SNAPSHOT</version>
 	   </dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>

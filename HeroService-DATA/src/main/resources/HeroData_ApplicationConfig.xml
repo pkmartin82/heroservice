@@ -21,7 +21,7 @@
 	</bean>
 	
 	<bean id="heroSessionFactory"
-		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<qualifier value="heroSessionFactory" />
 		<property name="dataSource">
 			<ref bean="heroDataSource" />
@@ -41,7 +41,7 @@
 	</bean>
 	
 	<bean id="heroTransactionManager"
-		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<qualifier value="heroTransactionManager" />
 		<property name="sessionFactory">
 			<ref bean="heroSessionFactory" />

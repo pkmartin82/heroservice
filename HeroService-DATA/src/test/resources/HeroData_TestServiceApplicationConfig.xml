@@ -13,7 +13,7 @@
 	</bean>
 
 	<bean id="heroDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-		<property name="jndiName" value="java:/datasources/HeroDS" />
+		<property name="jndiName" value="java:comp/env/jdbc/HeroDS" />
 		<property name="lookupOnStartup" value="true" />
 		<property name="cache" value="true" />
 		<property name="proxyInterface" value="javax.sql.DataSource" />

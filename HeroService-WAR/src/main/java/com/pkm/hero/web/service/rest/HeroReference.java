@@ -2,7 +2,7 @@ package com.pkm.hero.web.service.rest;
 
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
+//import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.DELETE;
@@ -21,7 +21,7 @@ import com.pkm.hero.business.facade.HeroFacade;
 import com.pkm.hero.web.startup.ApplicationContextProvider;
 
 @Path("/HeroReference")
-@RequestScoped
+//@RequestScoped
 public class HeroReference {
 
 	/*

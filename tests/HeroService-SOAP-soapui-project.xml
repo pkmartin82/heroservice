@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="267b9331-bed8-4201-850f-149a5e88e8ee" activeEnvironment="Default" name="HeroService-SOAP" soapui-version="5.4.0" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="83ff892c-a27d-4fa6-8cf9-fb51d663f0ce" wsaVersion="NONE" name="HeroWebServiceSoapBinding" type="wsdl" bindingName="{http://soap.service.web.hero.pkm.com/}HeroWebServiceSoapBinding" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/heroservice/soap/HeroWebService?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/heroservice/soap/HeroWebService?wsdl"><con:part><con:url>http://localhost:8080/heroservice/soap/HeroWebService?wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="HeroWebService" targetNamespace="http://soap.service.web.hero.pkm.com/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://soap.service.web.hero.pkm.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http">
+  <wsdl:types>
+    <xs:schema elementFormDefault="unqualified" targetNamespace="http://soap.service.web.hero.pkm.com/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="getHero" type="tns:getHero"/>
+      <xs:element name="getHeroNames" type="tns:getHeroNames"/>
+      <xs:element name="getHeroNamesResponse" type="tns:getHeroNamesResponse"/>
+      <xs:element name="getHeroResponse" type="tns:getHeroResponse"/>
+      <xs:element name="getHeroes" type="tns:getHeroes"/>
+      <xs:element name="getHeroesResponse" type="tns:getHeroesResponse"/>
+      <xs:element name="getSecretIdentity" type="tns:getSecretIdentity"/>
+      <xs:element name="getSecretIdentityResponse" type="tns:getSecretIdentityResponse"/>
+      <xs:element name="hero" type="tns:hero"/>
+      <xs:complexType name="getHeroNames">
+        <xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name="getHeroNamesResponse">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="heroNames" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getHero">
+        <xs:sequence>
+          <xs:element name="heroName" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getHeroResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="hero" type="tns:hero"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="hero">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="heroId" type="xs:int"/>
+          <xs:element minOccurs="0" name="heroName" type="xs:string"/>
+          <xs:element minOccurs="0" name="secretIdentity" type="xs:string"/>
+          <xs:element minOccurs="0" name="numOthersWhoKnowSecret" type="xs:int"/>
+          <xs:element minOccurs="0" name="catchphrase" type="xs:string"/>
+          <xs:element minOccurs="0" name="universeId" type="xs:int"/>
+          <xs:element minOccurs="0" name="insertUser" type="xs:string"/>
+          <xs:element minOccurs="0" name="insertTime" type="xs:dateTime"/>
+          <xs:element minOccurs="0" name="updateUser" type="xs:string"/>
+          <xs:element minOccurs="0" name="updateTime" type="xs:dateTime"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getSecretIdentity">
+        <xs:sequence>
+          <xs:element name="heroName" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getSecretIdentityResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="secretIdentity" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getHeroes">
+        <xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name="getHeroesResponse">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="heroes" type="tns:hero"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="getHeroResponse">
+    <wsdl:part element="tns:getHeroResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSecretIdentityResponse">
+    <wsdl:part element="tns:getSecretIdentityResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getHeroNamesResponse">
+    <wsdl:part element="tns:getHeroNamesResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getHeroesResponse">
+    <wsdl:part element="tns:getHeroesResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getHeroes">
+    <wsdl:part element="tns:getHeroes" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getHeroNames">
+    <wsdl:part element="tns:getHeroNames" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getHero">
+    <wsdl:part element="tns:getHero" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSecretIdentity">
+    <wsdl:part element="tns:getSecretIdentity" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="HeroReference">
+    <wsdl:operation name="getHeroNames">
+      <wsdl:input message="tns:getHeroNames" name="getHeroNames"></wsdl:input>
+      <wsdl:output message="tns:getHeroNamesResponse" name="getHeroNamesResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getHero">
+      <wsdl:input message="tns:getHero" name="getHero"></wsdl:input>
+      <wsdl:output message="tns:getHeroResponse" name="getHeroResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSecretIdentity">
+      <wsdl:input message="tns:getSecretIdentity" name="getSecretIdentity"></wsdl:input>
+      <wsdl:output message="tns:getSecretIdentityResponse" name="getSecretIdentityResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getHeroes">
+      <wsdl:input message="tns:getHeroes" name="getHeroes"></wsdl:input>
+      <wsdl:output message="tns:getHeroesResponse" name="getHeroesResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="HeroWebServiceSoapBinding" type="tns:HeroReference">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getHeroNames">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getHeroNames">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getHeroNamesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getHero">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getHero">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getHeroResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSecretIdentity">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getSecretIdentity">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getSecretIdentityResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getHeroes">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getHeroes">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getHeroesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="HeroWebService">
+    <wsdl:port binding="tns:HeroWebServiceSoapBinding" name="HeroReferenceImplPort">
+      <soap:address location="http://localhost:8080/heroservice/soap/HeroWebService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/heroservice/soap/HeroWebService</con:endpoint></con:endpoints><con:operation id="ac042218-7269-42b0-b766-38737587305d" isOneWay="false" action="" name="getHero" bindingOperationName="getHero" type="Request-Response" outputName="getHeroResponse" inputName="getHero" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="f8a414ec-e029-4e41-a1ac-e06c966ff506" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/heroservice/soap/HeroWebService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.service.web.hero.pkm.com/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <soap:getHero>
+         <heroName>The Human Torch</heroName>
+      </soap:getHero>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://soap.service.web.hero.pkm.com/HeroReference/getHero"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="022e908b-5501-4843-90ab-e8312079e031" isOneWay="false" action="" name="getHeroes" bindingOperationName="getHeroes" type="Request-Response" outputName="getHeroesResponse" inputName="getHeroes" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="87f7ba16-a624-4c3e-984c-c173f849e8f7" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/heroservice/soap/HeroWebService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.service.web.hero.pkm.com/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <soap:getHeroes/>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://soap.service.web.hero.pkm.com/HeroReference/getHeroes"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="2c84a25c-842f-4174-8419-885702473ba2" isOneWay="false" action="" name="getHeroNames" bindingOperationName="getHeroNames" type="Request-Response" outputName="getHeroNamesResponse" inputName="getHeroNames" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="9a0c2a1b-fded-412a-aa93-ccda777a75b9" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/heroservice/soap/HeroWebService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.service.web.hero.pkm.com/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <soap:getHeroNames/>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://soap.service.web.hero.pkm.com/HeroReference/getHeroNames"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="aa407e59-8366-49ed-ab04-ed5a69721482" isOneWay="false" action="" name="getSecretIdentity" bindingOperationName="getSecretIdentity" type="Request-Response" outputName="getSecretIdentityResponse" inputName="getSecretIdentity" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="a0cf2956-93e3-41ec-bbd2-667d2deff21d" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/heroservice/soap/HeroWebService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap="http://soap.service.web.hero.pkm.com/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <soap:getSecretIdentity>
+         <heroName>Mr. Fantastic</heroName>
+      </soap:getSecretIdentity>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://soap.service.web.hero.pkm.com/HeroReference/getSecretIdentity"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/></con:soapui-project>

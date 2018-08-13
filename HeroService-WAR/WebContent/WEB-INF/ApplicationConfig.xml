@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
@@ -10,5 +10,8 @@
 	<import resource="classpath:HeroData_ApplicationConfig.xml" />
 	<import resource="classpath:HeroServiceJar_ApplicationConfig.xml" />
 
-	<context:component-scan base-package="com.pkm.hero.web" />
+	<context:component-scan	base-package="com.pkm.hero.web" />
+
+	<import resource="classpath:CxfRestConfig.xml" />
+	<import resource="classpath:CxfSoapConfig.xml" />
 </beans>

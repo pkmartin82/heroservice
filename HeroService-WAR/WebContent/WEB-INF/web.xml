@@ -12,12 +12,12 @@
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
   <servlet>
-    <display-name>HeroReference</display-name>
-    <servlet-name>HeroReference</servlet-name>
-    <servlet-class>com.pkm.hero.web.service.soap.HeroReferenceImpl</servlet-class>
+    <servlet-name>CXFServlet</servlet-name>
+    <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-    <servlet-name>HeroReference</servlet-name>
-    <url-pattern>/soap/HeroReference</url-pattern>
+    <servlet-name>CXFServlet</servlet-name>
+    <url-pattern>/*</url-pattern>
   </servlet-mapping>
 </web-app>

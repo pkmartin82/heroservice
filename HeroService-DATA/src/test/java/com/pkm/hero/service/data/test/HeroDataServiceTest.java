@@ -24,7 +24,7 @@ import com.pkm.hero.service.data.entity.UniverseEntity;
 import com.pkm.hero.service.data.service.HeroDataService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/HeroData_ApplicationConfig.xml")
+@ContextConfiguration("/HeroServiceData_ApplicationConfig.xml")
 public class HeroDataServiceTest {
 
 	/** Default Universe Id */
@@ -66,7 +66,7 @@ public class HeroDataServiceTest {
 			dataSource.setConnectionPoolDataSource(cpds);
 			dataSource.setMaxActive(10);
 			dataSource.setMaxWait(50);
-			builder.bind("java:/datasources/HeroDS", dataSource);
+			builder.bind("java:comp/env/jdbc/HeroDS", dataSource);
 			builder.activate();
 		} catch (NamingException ex) {
 			ex.printStackTrace();

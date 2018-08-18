@@ -7,7 +7,7 @@
             http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
-	<import resource="classpath:HeroData_ApplicationConfig.xml" />
+	<import resource="classpath:HeroServiceData_ApplicationConfig.xml" />
 	<import resource="classpath:HeroServiceJar_ApplicationConfig.xml" />
 
 	<context:component-scan	base-package="com.pkm.hero.web" />

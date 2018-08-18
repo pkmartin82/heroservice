@@ -34,7 +34,7 @@ import com.pkm.hero.service.data.entity.HeroEntity;
 import com.pkm.hero.service.data.entity.UniverseEntity;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/HeroData_ApplicationConfig.xml")
+@ContextConfiguration("/HeroServiceData_ApplicationConfig.xml")
 @Transactional(value = "heroTransactionManager", propagation = Propagation.SUPPORTS)
 // @TransactionConfiguration(transactionManager = "heroTransactionManager",
 // defaultRollback = true)
@@ -66,7 +66,7 @@ public class HeroDataDaoTest {
 			dataSource.setConnectionPoolDataSource(cpds);
 			dataSource.setMaxActive(10);
 			dataSource.setMaxWait(50);
-			builder.bind("java:/datasources/HeroDS", dataSource);
+			builder.bind("java:comp/env/jdbc/HeroDS", dataSource);
 			builder.activate();
 		} catch (NamingException ex) {
 			ex.printStackTrace();
